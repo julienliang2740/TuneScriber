@@ -18,10 +18,16 @@ def change_instrument_mido(midi_file_path, new_instrument, output_file_path, is_
     for track in mid.tracks:
         for i, msg in enumerate(track):
             if msg.type == 'program_change':
-                track[i] = mido.Message('program_change', program=new_instrument)
+                if is_drum:
+                    track[i] = mido.Message('program_change', program=38, channel=9)  # Channel 10 for drums
+                else:
+                    track[i] = mido.Message('program_change', program=new_instrument)
+            elif msg.type == 'note_on' or msg.type == 'note_off':
+                if is_drum:
+                    msg.channel = 9  # Channel 10 for drums
     mid.save(output_file_path)
 
-def wav_to_midi(input_name, input_dir, output_dir, new_instrument):
+def wav_to_midi(input_name, input_dir, output_dir, new_instrument, is_drum=False):
     output_name_model = input_name.replace(".wav", ".npz")
     output_name_midi = input_name.replace(".wav", ".mid")
     output_name_csv = input_name.replace(".wav", ".csv")
@@ -36,7 +42,7 @@ def wav_to_midi(input_name, input_dir, output_dir, new_instrument):
         midi_data.write(f)
 
     output_path = os.path.join(output_dir, output_name_midi)
-    change_instrument_mido(temp_midi_path, new_instrument, output_path)
+    change_instrument_mido(temp_midi_path, new_instrument, output_path, is_drum)
 
     # REMOVE TEMP FILE
     os.remove(temp_midi_path)
@@ -85,10 +91,10 @@ def midi_to_pdf(input_name, input_dir, output_dir, musescore_path):
     print(f"MusicXML file saved to: {output_path_musicxml}")
     print(f"PDF file saved to: {output_path_pdf}")
 
-def single_wav_conversion(input_name_no_filetype, wav_dir, midi_dir, pdf_dir, new_instrument):
+def single_wav_conversion(input_name_no_filetype, wav_dir, midi_dir, pdf_dir, new_instrument, is_drum=False):
     input_name_wav = input_name_no_filetype + '.wav'
     input_name_midi = input_name_no_filetype + '.mid'
-    wav_to_midi(input_name_wav, wav_dir, midi_dir, new_instrument)
+    wav_to_midi(input_name_wav, wav_dir, midi_dir, new_instrument, is_drum)
     midi_to_pdf(input_name_midi, midi_dir, pdf_dir, '/usr/bin/mscore3')
 
 def batch_wav_conversion(wav_dir, midi_dir, pdf_dir):
@@ -97,24 +103,26 @@ def batch_wav_conversion(wav_dir, midi_dir, pdf_dir):
         input_name_midi = file.replace('.wav', '.mid')
 
         instrument_number = -1
+        is_drum = False
         if file == 'bass':
-            instrument_number = 1
+            instrument_number = 32
         elif file == 'drums':
-            instrument_number = 1
+            instrument_number = 0  # Program change number is not used for drums, so it's set to 0
+            is_drum = True
         elif file == 'guitar':
-            instrument_number = 1
+            instrument_number = 24
         elif file == 'keys':
-            instrument_number = 1
+            instrument_number = 0
         elif file == 'piano':
-            instrument_number = 1
+            instrument_number = 0
         elif file == 'strings':
-            instrument_number = 1
+            instrument_number = 48
         elif file == 'vocals':
-            instrument_number = 1
+            instrument_number = 52
         elif file == 'wind':
-            instrument_number = 1
+            instrument_number = 73
         else: # the 'other' file
-            instrument_number = 1
+            instrument_number = 0
 
         wav_to_midi(input_name_wav, wav_dir, midi_dir, instrument_number)
         midi_to_pdf(input_name_midi, midi_dir, pdf_dir, '/usr/bin/mscore3')
@@ -127,4 +135,4 @@ if __name__ == "__main__":
     
     # single_wav_conversion('erika_trumpet', 'wav_files', 'midi_files', 'pdf_files', 57) # number corresponds to instrument in midi conversion system
     # batch_wav_conversion('redsun_wav', 'redsun_midi', 'redsun_pdf')
-    single_wav_conversion('random_drumline', 'wav_files', 'midi_files', 'pdf_files', 128)
+    single_wav_conversion('erika_trumpet', 'wav_files', 'midi_files', 'pdf_files', 38, False)
