@@ -91,9 +91,7 @@ function PlayerComponent({ fileName, audioSrc, delay }) {
           <button className="custom-button">Download Sheet</button>
         </div>
       </div>
-      <AnimatePresence>
         {showModal && <PreviewPDF showModal={showModal} setShowModal={setShowModal} pdfSrc={pdfSrc} />}
-      </AnimatePresence>
     </motion.div>
   );
 }
