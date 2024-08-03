@@ -1,7 +1,10 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 import requests
+import zipfile
+import io
 import os
+import shutil
 
 
 from .music_processor import MusicProcessor
@@ -15,29 +18,7 @@ def create_app():
     def index():
         return "Hello, World!"
 
-    # @app.route('/get-urls', methods=["GET"])
-    # def get_upload_url():
-    #     response = MusicProcessor.get_upload_url()
-    #     return response.json()
-
-    @app.route('/upload', methods=["GET"])
-    def upload():
-        upload_url, download_url = MusicProcessor.get_urls().values()
-
-        response = MusicProcessor.upload(
-            "C:\\Projects\\HackTheSixMusicProject\\server\\app\\say.mp3", upload_url)
-        return response
-
-        if "file" not in request.files:
-            return jsonify({"error": "No file part"}), 400
-        file = request.files["file"]
-        if file.filename == "":
-            return jsonify({"error": "No selected file"}), 400
-        if file:
-            response = MusicProcessor.upload(file, upload_url)
-            return response.json()
-
-    @app.route('/separate-audio, methods=["POST"]')
+    @app.route('/separate, methods=["POST"]')
     def separate_audio():
         # check for file attribute in request object
         if "file" not in request.files:
@@ -48,5 +29,31 @@ def create_app():
         if file:
             filepath = os.path.join("uploads", file.filename)
             file.save(filepath)
+
+        mp = MusicProcessor()
+        status, result = mp.separate(filepath)
+
+        if not os.path.exists("temp"):
+            os.makedirs("temp")
+            print("Created temp directory")
+        else:
+            print("Temp directory already exists")
+
+        for instrument, url in result.items():
+            MusicProcessor.download(url, "temp", instrument + ".wav")
+            print(f"Downloaded {instrument} to temp directory")
+
+        if os.path.exists("temp"):
+            shutil.rmtree("temp")
+            print(f"Directory '{"temp"}' and its contents deleted")
+        else:
+            print(f"Directory '{"temp"}' does not exist")
+
+        # zip_buffer = io.BytesIO()
+
+        # with zipfile.ZipFile(zip_buffer, "w") as zip_file:
+        #     for instrument, url in result.items():
+        #         response = requests.get(url)
+        #         zip_file.writestr(instrument, response.content)
 
     return app
