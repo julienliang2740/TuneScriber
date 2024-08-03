@@ -3,6 +3,8 @@ import { React, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import axios from "axios";
+import JSZip from "jszip";
+import { saveAs } from "file-saver";
 
 const Upload = () => {
     const [file, setFile] = useState("");
@@ -37,14 +39,29 @@ const Upload = () => {
                 "http://127.0.0.1:5000/separate",
                 formData,
                 {
+                    responseType: "arraybuffer",
                     headers: {
                         "Content-Type": "multipart/form-data",
                     },
                 }
             );
-
+            const processedFiles = [];
             if (response.status === 200) {
-                console.log(response.data);
+                const zip = new JSZip();
+                const content = await zip.loadAsync(response.data);
+                console.log(content);
+                Object.keys(content.files).forEach(async (filename) => {
+                    const fileData = await content.files[filename].async(
+                        "blob"
+                    );
+                    const url = URL.createObjectURL(
+                        new Blob([fileData], { type: "audio/mp3" })
+                    );
+                    if (filename === "vocals.wav") {
+                        setMp3Url(url);
+                    }
+                    console.log(url);
+                });
                 setFinish(true);
                 setLoading(false);
             } else {
@@ -56,6 +73,7 @@ const Upload = () => {
     };
 
     const showResults = async () => {
+        navigate("/result");
         // try {
         // 	const response = await axios.get('http://127.0.0.1:5000/get-audio', {
         // 		responseType: 'blob',
