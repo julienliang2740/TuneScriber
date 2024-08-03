@@ -35,6 +35,8 @@ function Result() {
     { fileName: 'drums.mp3', audioSrc: '/audio/drums.mp3', delay: 0.3 },
     { fileName: 'bass.wav', audioSrc: '/audio/bass.wav', delay: 0.6 },
     { fileName: 'guitar.mp3', audioSrc: '/audio/guitar.mp3', delay: 0.9 },
+    { fileName: 'piano.mp3', audioSrc: '/audio/piano.mp3', delay: 1.2 },
+    { fileName: 'violin.mp3', audioSrc: '/audio/violin.mp3', delay: 1.5 },
   ];
 
   return (
@@ -48,7 +50,7 @@ function Result() {
         Enjoy your sheet music!
       </motion.h1>
       <motion.div
-        className="flex flex-col gap-6"
+        className="flex flex-col gap-6 overflow-y-auto max-h-96"  // Make the list scrollable
         variants={container}
         initial="hidden"
         animate="show"

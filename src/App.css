@@ -7,15 +7,6 @@
 	src: url('../public/fonts/Inter-VariableFont_opsz\,wght.ttf');
 }
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@font-face {
-  font-family: Inter;
-  src: url('../public/fonts/Inter-VariableFont_opsz,wght.ttf');
-}
-
 @keyframes gradientBackground {
   0% {
     background-position: 0% 50%;
@@ -37,6 +28,10 @@
     background-position: 0% 50%;
     background-size: 150% 150%;
   }
+}
+
+body {
+  overflow:hidden;
 }
 
 .App {
