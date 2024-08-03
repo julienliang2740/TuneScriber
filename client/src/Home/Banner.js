@@ -22,7 +22,7 @@ const Banner = () => {
 			initial="hidden"
 			animate="show"
 		>
-			<img src={Music} className='h-100 mx-auto'/>
+			<img src={Music} className='h-100 mx-auto rounded-2xl'/>
 		</motion.div>
 	)
 }
