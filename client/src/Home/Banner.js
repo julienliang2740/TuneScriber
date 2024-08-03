@@ -1,6 +1,6 @@
 import React from 'react'
 import { motion } from 'framer-motion'
-import Music from '../img/score.png'
+import Music from '../public/img/score.png'
 
 const Banner = () => {
 	const container = {
