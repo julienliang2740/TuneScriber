@@ -23,6 +23,10 @@ module.exports = {
 			large: '350px',
 			xLarge: '500px', 
 			xxLarge: '600px'
+		},
+		maxHeight: {
+			medium: '55vh',
+			large: '75vh'
 		}
 	},
   },
