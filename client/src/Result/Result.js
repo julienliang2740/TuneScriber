@@ -67,6 +67,9 @@ function Result() {
         ))}
       </motion.div>
       </div>
+      <Button>
+        Hello
+      </Button>
     </div>
   );
 }
