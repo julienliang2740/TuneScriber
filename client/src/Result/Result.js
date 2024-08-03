@@ -6,6 +6,7 @@ import './styles.css';
 // Import images
 import leftImage from '../img/score.png';
 import rightImage from '../img/score.png';
+import { Button } from '@radix-ui/themes';
 
 const container = {
   hidden: { opacity: 0 },
@@ -49,9 +50,9 @@ function Result() {
       >
         Enjoy your sheet music!
       </motion.h1>
-      <div class="mb-10">
+      <div>
       <motion.div
-        className="flex flex-col gap-6 overflow-y-auto min-w-screen max-h-screen pl-5 pr-5"
+        className="flex flex-col gap-6 overflow-y-auto min-w-screen max-h-screen pl-5 pr-5 mb-12"
         variants={container}
         initial="hidden"
         animate="show"
