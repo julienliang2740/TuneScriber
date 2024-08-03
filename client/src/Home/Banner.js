@@ -1,12 +1,30 @@
 import React from 'react'
+import { motion } from 'framer-motion'
 import Music from '../img/score.png'
 
 const Banner = () => {
-  return (
-	<div>
-		<img src={Music} className='h-200 absolute'/>
-	</div>
-  )
+	const container = {
+		hidden: { opacity: 0, y: 50 },
+		show: {
+		  opacity: 0.9,
+		  y: 0,
+		  transition: {
+			duration: 1,
+			ease: "easeOut",
+		  },
+		},
+	};
+
+	return (
+		<motion.div 
+			className='bg-white bg-opacity-20 p-5 rounded-3xl m-10 fixed top-3/4'
+			variants={container}
+			initial="hidden"
+			animate="show"
+		>
+			<img src={Music} className='h-100 mx-auto'/>
+		</motion.div>
+	)
 }
 
 export default Banner

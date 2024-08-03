@@ -67,7 +67,7 @@ const Upload = () => {
 	}, [loading])
 
 	return (
-		<div className='max-w-xLarge flex flex-col'>
+		<div className='max-w-xLarge flex flex-col m-1 justify-center items-center'>
 			<motion.h1 
 				className='font-inter opacity-75 text-large font-medium mb-2 ' 
 				variants={textAnimation}
@@ -125,7 +125,7 @@ const Upload = () => {
 			)}
 			{finish && (
 				<button 
-					className="relative inline-flex h-12 overflow-hidden rounded-lg p-[1px] mt-5"
+					className="relative inline-flex h-12 overflow-hidden rounded-lg p-[1px] mt-5 max-w-small"
 					onClick={showResults}
 				>
 					<span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
