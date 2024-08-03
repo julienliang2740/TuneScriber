@@ -52,7 +52,7 @@ function PlayerComponent({ fileName, audioSrc, delay }) {
       transition={{ duration: 0.6, ease: "easeOut", delay }}
     >
       <div className="text-sm flex font-medium mb-1 opacity-70">{fileName.split('.').slice(0, -1).join('.')}</div>
-      <div className="block w-full max-w-lg p-6 bg-white border border-white rounded-lg bg-blend-overlay opacity-100 bg-opacity-10 border-opacity-30">
+      <div className="p-6 block w-full max-w-2xl bg-white border border-white rounded-lg bg-blend-overlay opacity-100 bg-opacity-10 border-opacity-30">
         <div>
           <div className="flex justify-between">
             <div className="text-xs opacity-80">{fileName}</div>
@@ -76,12 +76,12 @@ function PlayerComponent({ fileName, audioSrc, delay }) {
               value={[((currentTime / duration) * 100) || 0]}
               onValueChange={handleSliderChange}
               color="plum"
-              size="1"
+              size=""
             />
           </div>
           <audio ref={audioRef} src={audioSrc}></audio>
         </div>
-        <div className="mt-4 flex space-x-2 max-w-lg ">
+        <div className="mt-4 flex space-x-2 max-w-2xl ">
           <button 
             className="custom-button outline opacity-80"
             onClick={() => setShowModal(true)}

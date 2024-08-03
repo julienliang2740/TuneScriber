@@ -49,8 +49,9 @@ function Result() {
       >
         Enjoy your sheet music!
       </motion.h1>
+      <div class="mb-10">
       <motion.div
-        className="flex flex-col gap-6 overflow-y-auto max-h-96"  // Make the list scrollable
+        className="flex flex-col gap-6 overflow-y-auto min-w-screen max-h-screen pl-5 pr-5"
         variants={container}
         initial="hidden"
         animate="show"
@@ -64,6 +65,7 @@ function Result() {
           />
         ))}
       </motion.div>
+      </div>
     </div>
   );
 }
