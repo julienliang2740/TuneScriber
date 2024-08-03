@@ -27,24 +27,21 @@ def create_app():
     @app.route('/upload', methods=["POST"])
     def upload():
 
-        # if 'file' not in request.files:
-        #     print("no file part")
-        #     return jsonify({'error': 'No file part'}), 400
-        
         file = request.files['file']
         print(file)
 
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
         if not os.path.exists(app.config['UPLOAD_FOLDER']):
-                os.makedirs(app.config['UPLOAD_FOLDER'])  # Ensure the upload folder exists
-                print(f"Created directory {app.config['UPLOAD_FOLDER']}")
+            # Ensure the upload folder exists
+            os.makedirs(app.config['UPLOAD_FOLDER'])
+            print(f"Created directory {app.config['UPLOAD_FOLDER']}")
         file.save(filepath)
         return jsonify({'message': 'File uploaded successfully'}), 200
-        
+
         # if file.filename == '':
         #     print("no selected file")
         #     return jsonify({'error': 'No selected file'}), 400
-        
+
         # if file and allowed_file(file.name):
         #     print("allowed")
 
@@ -58,34 +55,35 @@ def create_app():
     def get_audio():
         file = "./say-short.mp3"
         return send_file(file, mimetype='audio/mpeg')
-    
+
     @app.route('/separate', methods=["POST"])
     def separate_audio():
-        print(request.json())
-        # check for file attribute in request object
-        if "file" not in request.files:
-            return jsonify({"error": "No file part"}), 400
-        file = request.files["file"]
-        if file.filename == "":
-            return jsonify({"error": "No selected file"}), 400
-        if file:
-            filepath = os.path.join("uploads", file.filename)
-            file.save(filepath)
+        if not os.path.exists("./processed"):
+            os.makedirs("./processed")
+            print("Created processed directory")
+        else:
+            print("Processed directory already exists")
 
-        return filepath
+        file = request.files['file']
+        print(file)
 
-       # mp = MusicProcessor()
-       # status, result = mp.separate(filepath)
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+        if not os.path.exists(app.config['UPLOAD_FOLDER']):
+            # Ensure the upload folder exists
+            os.makedirs(app.config['UPLOAD_FOLDER'])
+            print(f"Created directory {app.config['UPLOAD_FOLDER']}")
+        file.save(filepath)
 
-        # if not os.path.exists("temp"):
-        #     os.makedirs("temp")
-        #     print("Created temp directory")
-        # else:
-        #     print("Temp directory already exists")
+        mp = MusicProcessor()
+        status, result = mp.separate(filepath)
 
-        # for instrument, url in result.items():
-        #     MusicProcessor.download(url, "temp", instrument + ".wav")
-        #     print(f"Downloaded {instrument} to temp directory")
+        print(status, "separated")
+
+        for instrument, url in result.items():
+            mp.download(url, "./processed", instrument + ".wav")
+            print(f"Downloaded {instrument} to processed directory")
+
+        return jsonify(result), 200
 
         # if os.path.exists("temp"):
         #     shutil.rmtree("temp")

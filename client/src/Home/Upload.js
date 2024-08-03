@@ -62,7 +62,7 @@ const Upload = () => {
 
         try {
             const response = await axios.post(
-                "http://127.0.0.1:5000/upload",
+                "http://127.0.0.1:5000/separate",
                 formData,
                 {
                     headers: {
@@ -74,18 +74,20 @@ const Upload = () => {
             if (response.status === 200) {
                 console.log(response.data);
                 setFinish(true);
+                setLoading(false);
             } else {
                 console.error("Failed to upload file");
             }
         } catch (error) {
             console.error("Error:", error);
         }
+    };
 
+    const showResults = async () => {
         // try {
         // 	const response = await axios.get('http://127.0.0.1:5000/get-audio', {
         // 		responseType: 'blob',
         // 	});
-
         // 	if (response.status === 200) {
         // 		const url = URL.createObjectURL(new Blob([response.data], { type: 'audio/wav' }));
         // 		setMp3Url(url);
@@ -122,16 +124,16 @@ const Upload = () => {
         },
     };
 
-    useEffect(() => {
-        // fake for now
-        if (loading === "loading") {
-            console.log("loading", finish);
+    // useEffect(() => {
+    //     // fake for now
+    //     if (loading) {
+    //         console.log("loading");
 
-            setTimeout(() => {
-                setFinish(true);
-            }, 5000);
-        }
-    }, [loading, finish]);
+    //         // setTimeout(() => {
+    //         //     setFinish(true);
+    //         // }, 5000);
+    //     }
+    // }, [loading]);
 
     return (
         <div className="max-w-xxLarge flex flex-col m-1 justify-center items-center">
