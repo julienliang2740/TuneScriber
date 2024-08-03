@@ -18,6 +18,11 @@ def create_app():
     def index():
         return "Hello, World!"
 
+    @app.route("/get-audio", methods=["GET"])
+    def get_audio():
+        file = "C:\\Projects\\HackTheSixMusicProject\\server\\app\\say-short.mp3"
+        return send_file(file, mimetype='audio/mpeg')
+
     @app.route('/separate, methods=["POST"]')
     def separate_audio():
         # check for file attribute in request object
