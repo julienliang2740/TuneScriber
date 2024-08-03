@@ -13,18 +13,15 @@ import numpy as np
 import os
 from pathlib import Path
 
-def change_instrument_mido(midi_file_path, new_instrument, output_file_path, is_drum=False):
+
+def change_instrument_mido(midi_file_path, new_instrument, output_file_path):
     mid = mido.MidiFile(midi_file_path)
+
     for track in mid.tracks:
         for i, msg in enumerate(track):
             if msg.type == 'program_change':
-                if is_drum:
-                    track[i] = mido.Message('program_change', program=38, channel=9)  # Channel 10 for drums
-                else:
-                    track[i] = mido.Message('program_change', program=new_instrument)
-            elif msg.type == 'note_on' or msg.type == 'note_off':
-                if is_drum:
-                    msg.channel = 9  # Channel 10 for drums
+                track[i] = mido.Message('program_change', program=new_instrument)
+
     mid.save(output_file_path)
 
 def wav_to_midi(input_name, input_dir, output_dir, new_instrument, is_drum=False):
@@ -35,24 +32,20 @@ def wav_to_midi(input_name, input_dir, output_dir, new_instrument, is_drum=False
     input_path = os.path.join(input_dir, input_name)
     os.makedirs(output_dir, exist_ok=True)
 
-    model_output, midi_data, note_events = predict(input_path)
+    if not is_drum:
+        model_output, midi_data, note_events = predict(input_path)
 
-    temp_midi_path = os.path.join(output_dir, 'temp_' + output_name_midi)
-    with open(temp_midi_path, 'wb') as f:
-        midi_data.write(f)
+        temp_midi_path = os.path.join(output_dir, 'temp_' + output_name_midi)
+        with open(temp_midi_path, 'wb') as f:
+            midi_data.write(f)
 
-    output_path = os.path.join(output_dir, output_name_midi)
-    change_instrument_mido(temp_midi_path, new_instrument, output_path, is_drum)
+        output_path = os.path.join(output_dir, output_name_midi)
+        change_instrument_mido(temp_midi_path, new_instrument, output_path)
 
-    # REMOVE TEMP FILE
-    os.remove(temp_midi_path)
-
-    # # Verify lengths
-    # original_length = librosa.get_duration(filename=input_path)
-    # model_output_length = model_output['note'].shape[0] / (AUDIO_SAMPLE_RATE / FFT_HOP)
-
-    # print(f"Original audio length (in seconds): {original_length}")
-    # print(f"Model output length (in seconds): {model_output_length}")
+        # REMOVE TEMP FILE
+        # os.remove(temp_midi_path)
+    elif is_drum:
+        pass
 
 def midi_to_pdf(input_name, input_dir, output_dir, musescore_path):
     output_name_pdf = input_name.replace(".midi", ".pdf").replace(".mid", ".pdf")
@@ -135,4 +128,4 @@ if __name__ == "__main__":
     
     # single_wav_conversion('erika_trumpet', 'wav_files', 'midi_files', 'pdf_files', 57) # number corresponds to instrument in midi conversion system
     # batch_wav_conversion('redsun_wav', 'redsun_midi', 'redsun_pdf')
-    single_wav_conversion('erika_trumpet', 'wav_files', 'midi_files', 'pdf_files', 38, False)
+    single_wav_conversion('erika_trumpet', 'wav_files', 'midi_files', 'pdf_files', 57, False)
