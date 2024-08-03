@@ -6,7 +6,8 @@ module.exports = {
   theme: {
     extend: {
 		colors: {
-			violet: '#252273'
+			violet: '#252273',
+			purple: '#363470'
 		},
 		fontFamily: {
 			inter: ['Inter', 'sans-serif']
