@@ -4,7 +4,7 @@ import Music from '../img/score.png'
 const Banner = () => {
   return (
 	<div>
-		<img src={Music}/>
+		<img src={Music} className='h-200 absolute'/>
 	</div>
   )
 }

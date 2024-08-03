@@ -20,7 +20,8 @@ module.exports = {
 		maxWidth: {
 			small: '175px',
 			medium: '300px',
-			large: '350px'
+			large: '350px',
+			xLarge: '500px'
 		}
 	},
   },

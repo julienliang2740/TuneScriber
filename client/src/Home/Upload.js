@@ -67,9 +67,9 @@ const Upload = () => {
 	}, [loading])
 
 	return (
-		<div>
+		<div className='max-w-xLarge flex flex-col'>
 			<motion.h1 
-				className='font-inter opacity-75 text-large font-medium mb-2' 
+				className='font-inter opacity-75 text-large font-medium mb-2 ' 
 				variants={textAnimation}
 				initial="hidden"
         		animate="show"

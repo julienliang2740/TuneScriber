@@ -4,7 +4,7 @@ import Banner from './Banner'
 
 const Home = () => {
   return (
-	<div>
+	<div className='flex flex-col justify-center items-center overflow-hidden no-scroll'>
 		<Upload />
 		<Banner />
 	</div>
