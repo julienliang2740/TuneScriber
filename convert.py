@@ -43,6 +43,7 @@ def change_instrument_mido(midi_file_path, new_instrument, output_file_path):
 
     mid.save(output_file_path)
 
+# usage of last two variables (new_instrument and is_drum) are mutually exclusive: if one is used the other will not be in the code
 def wav_to_midi(input_name, input_dir, output_dir, new_instrument, is_drum=False):
     output_name_model = input_name.replace(".wav", ".npz")
     output_name_midi = input_name.replace(".wav", ".mid")
@@ -106,6 +107,7 @@ def midi_to_pdf(input_name, input_dir, output_dir, musescore_path):
     print(f"MusicXML file saved to: {output_path_musicxml}")
     print(f"PDF file saved to: {output_path_pdf}")
 
+# usage of last two variables (new_instrument and is_drum) are mutually exclusive: if one is used the other will not be in the code
 def single_wav_conversion(input_name_no_filetype, wav_dir, midi_dir, pdf_dir, new_instrument, is_drum=False):
     input_name_wav = input_name_no_filetype + '.wav'
     input_name_midi = input_name_no_filetype + '.mid'
@@ -114,27 +116,28 @@ def single_wav_conversion(input_name_no_filetype, wav_dir, midi_dir, pdf_dir, ne
 
 def batch_wav_conversion(wav_dir, midi_dir, pdf_dir):
     for file in os.listdir(wav_dir):
+        input_name_no_filetype = file.split('.')[0]
         input_name_wav = file
         input_name_midi = file.replace('.wav', '.mid')
 
         instrument_number = -1
         is_drum = False
-        if file == 'bass':
-            instrument_number = 32
-        elif file == 'drums':
+        if input_name_no_filetype == 'bass':
+            instrument_number = 33
+        elif input_name_no_filetype == 'drums':
             instrument_number = 0  # Program change number is not used for drums, so it's set to 0
             is_drum = True
-        elif file == 'guitar':
+        elif input_name_no_filetype == 'guitar':
             instrument_number = 24
-        elif file == 'keys':
+        elif input_name_no_filetype == 'keys':
             instrument_number = 0
-        elif file == 'piano':
+        elif input_name_no_filetype == 'piano':
             instrument_number = 0
-        elif file == 'strings':
+        elif input_name_no_filetype == 'strings':
             instrument_number = 48
-        elif file == 'vocals':
+        elif input_name_no_filetype == 'vocals':
             instrument_number = 52
-        elif file == 'wind':
+        elif input_name_no_filetype == 'wind':
             instrument_number = 73
         else: # the 'other' file
             instrument_number = 0
@@ -150,4 +153,5 @@ if __name__ == "__main__":
     
     # single_wav_conversion('erika_trumpet', 'wav_files', 'midi_files', 'pdf_files', 57) # number corresponds to instrument in midi conversion system
     # batch_wav_conversion('redsun_wav', 'redsun_midi', 'redsun_pdf')
-    single_wav_conversion('random_drumline', 'wav_files', 'midi_files', 'pdf_files', 57, True) # usage of last two variables (new_instrument and is_drum) are mutually exclusive: if one is used the other will not be in the code
+    # single_wav_conversion('random_drumline', 'wav_files', 'midi_files', 'pdf_files', 57, True) 
+    batch_wav_conversion('demo_wav', 'demo_midi', 'demo_pdf')
