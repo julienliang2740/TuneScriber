@@ -121,7 +121,9 @@ const Upload = () => {
 				</motion.div>
 			)}
 			{loading === 'loading' && !finish && (
-				<Progress color='green' style={{ height: '20px', marginTop: '10px'}}/>
+				<span className='w-full'>
+					<Progress color='green' style={{ height: '20px', marginTop: '10px'}}/>
+				</span>
 			)}
 			{finish && (
 				<button 
