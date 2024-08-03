@@ -2,8 +2,8 @@ import './App.css';
 import '@radix-ui/themes/styles.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Theme } from '@radix-ui/themes';
-import Upload from './Home/Upload';
 import Result from './Result/Result';
+import Home from './Home/Home';
 
 function App() {
   return (
@@ -13,9 +13,9 @@ function App() {
           <header className="App-header">
             <div className='m-10'>
               <Routes>
-                <Route path="/upload" element={<Upload />} />
+                <Route path="/upload" element={<Home />} />
                 <Route path="/result" element={<Result />} />
-                <Route path="/" element={<Upload />} />
+                <Route path="/" element={<Home />} />
               </Routes>
             </div>
           </header>
