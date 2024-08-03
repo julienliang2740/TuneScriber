@@ -3,6 +3,10 @@ import { motion } from 'framer-motion';
 import PlayerComponent from './PlayerComponent';
 import './styles.css';
 
+// Import images
+import leftImage from './score.png';
+import rightImage from './score.png';
+
 const container = {
   hidden: { opacity: 0 },
   show: {
@@ -13,22 +17,10 @@ const container = {
   },
 };
 
-const item = {
-  hidden: { opacity: 0, y: 50 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.6,
-      ease: "easeOut", // Use a smoother easing function
-    },
-  },
-};
-
 const textAnimation = {
   hidden: { opacity: 0, y: -50 },
   show: {
-    opacity: 1,
+    opacity: 0.9,
     y: 0,
     transition: {
       duration: 1,
@@ -38,10 +30,17 @@ const textAnimation = {
 };
 
 function Result() {
+  const audioFiles = [
+    { fileName: 'music.mp3', audioSrc: '/audio/music.mp3', delay: 0 },
+    { fileName: 'drums.mp3', audioSrc: '/audio/drums.mp3', delay: 0.3 },
+    { fileName: 'bass.wav', audioSrc: '/audio/bass.wav', delay: 0.6 },
+    { fileName: 'guitar.mp3', audioSrc: '/audio/guitar.mp3', delay: 0.9 },
+  ];
+
   return (
-    <div className="text-center text-white">
+    <div className="mt-12 relative min-h-screen text-center text-white">
       <motion.h1
-        className="text-5xl font-medium  opacity-80 mb-8"
+        className="text-5xl font-medium opacity-70 mb-8"
         variants={textAnimation}
         initial="hidden"
         animate="show"
@@ -54,10 +53,14 @@ function Result() {
         initial="hidden"
         animate="show"
       >
-        <motion.div variants={item}><PlayerComponent /></motion.div>
-        <motion.div variants={item}><PlayerComponent /></motion.div>
-        <motion.div variants={item}><PlayerComponent /></motion.div>
-        <motion.div variants={item}><PlayerComponent /></motion.div>
+        {audioFiles.map((audio, index) => (
+          <PlayerComponent 
+            key={index}
+            fileName={audio.fileName}
+            audioSrc={audio.audioSrc}
+            delay={audio.delay}
+          />
+        ))}
       </motion.div>
     </div>
   );
