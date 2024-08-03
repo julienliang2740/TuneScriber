@@ -2,13 +2,17 @@ import { Progress } from '@radix-ui/themes';
 import { React, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import axios from 'axios';
 
 const Upload = () => {
 	const [file, setFile] = useState('')
+	const [fileSource, setFileSource] = useState(null);
 	const [finish, setFinish] = useState(false);
 	const [uploaded, setUploaded] = useState(false);
 	const [loading, setLoading] = useState('upload needed');
+	const [mp3Url, setMp3Url] = useState('');
 	const navigate = useNavigate();
+	
 
 	const uploadFile = () => {
 		document.getElementById('file-input').click();
@@ -20,6 +24,7 @@ const Upload = () => {
 		if (file) {
 			setUploaded(true);
 			setFile(file.name);
+			setFileSource(file);
 		}
 	}
 
@@ -27,9 +32,45 @@ const Upload = () => {
 		setLoading('loading');
 	}
 
-	const showResults = () => {
-		navigate('/result')
-	}
+	const showResults = async () => {
+		const formData = new FormData();
+		formData.append('file', fileSource);
+		console.log("file", file)
+		console.log("fileSource", fileSource);
+
+		try {
+			const response = await axios.post('http://127.0.0.1:5000/upload', formData, {
+				headers: {
+					'Content-Type': 'multipart/form-data'
+				}
+			});
+			
+			if (response.status === 200) {
+				console.log(response.data);
+				setFinish(true);
+			} else {
+				console.error('Failed to upload file');
+			}
+		} catch (error) {
+			console.error('Error:', error);
+		}
+		
+		// try {
+		// 	const response = await axios.get('http://127.0.0.1:5000/get-audio', {
+		// 		responseType: 'blob',
+		// 	});
+			
+		// 	if (response.status === 200) {
+		// 		const url = URL.createObjectURL(new Blob([response.data], { type: 'audio/wav' }));
+		// 		setMp3Url(url);
+		// 		setFinish(true);
+		// 	} else {
+		// 		console.error('Failed to fetch results');
+		// 	}
+		// } catch (error) {
+		// 	console.error('Error:', error);
+		// }
+	};
 
 	const textAnimation = {
 		hidden: { opacity: 0, y: -50 },
@@ -132,6 +173,9 @@ const Upload = () => {
 					<span className="font-inter inline-flex h-full w-full cursor-pointer items-center justify-center rounded-lg bg-violet hover:bg-purple px-6 py-2 text-sm font-medium text-white backdrop-blur-3xl">
 						Show Results
 					</span>
+					<audio controls src={mp3Url} className='mt-5'>
+						Your browser does not support the audio element.
+					</audio>
 				</button>
 			)}
 		</div>
