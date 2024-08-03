@@ -34,11 +34,11 @@ def create_app():
         file = request.files['file']
         print(file)
 
-        #print("1234:", file.__dict__)
-        
-
-
-        print(os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True))
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+        if not os.path.exists(app.config['UPLOAD_FOLDER']):
+                os.makedirs(app.config['UPLOAD_FOLDER'])  # Ensure the upload folder exists
+                print(f"Created directory {app.config['UPLOAD_FOLDER']}")
+        file.save(filepath)
         return jsonify({'message': 'File uploaded successfully'}), 200
         
         # if file.filename == '':
