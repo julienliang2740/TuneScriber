@@ -1,6 +1,7 @@
 import { Progress } from '@radix-ui/themes';
 import { React, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 const Upload = () => {
 	const [file, setFile] = useState('')
@@ -30,6 +31,30 @@ const Upload = () => {
 		navigate('/result')
 	}
 
+	const textAnimation = {
+		hidden: { opacity: 0, y: -50 },
+		show: {
+		  opacity: 0.9,
+		  y: 0,
+		  transition: {
+			duration: 1,
+			ease: "easeOut",
+		  },
+		},
+	};
+
+	const container = {
+		hidden: { opacity: 0 },
+		show: {
+			opacity: 1,
+			transition: {
+				delay: 0.5,
+				duration: 1,
+				ease: "easeOut",
+			},
+		},
+	};
+
 	useEffect(() => {
 		// fake for now
 		if (loading === 'loading') {
@@ -43,11 +68,21 @@ const Upload = () => {
 
 	return (
 		<div>
-			<h1 className='font-inter opacity-75 text-large font-medium mb-2'>
+			<motion.h1 
+				className='font-inter opacity-75 text-large font-medium mb-2' 
+				variants={textAnimation}
+				initial="hidden"
+        		animate="show"
+			>
              Convert Your Favourite Song
-            </h1>
+            </motion.h1>
 			{loading === 'upload needed' && (
-				<div className='bg-opacity-15 bg-white p-2 rounded-lg m-5 border-white border border-opacity-100'>
+				<motion.div 
+					className='bg-opacity-15 bg-white p-2 rounded-lg m-5 border-white border border-opacity-100' 
+					variants={container}
+					initial="hidden"
+        			animate="show"
+				>
 					<div className='border-white border border-opacity-100 pb-12 pt-12 pr-20 pl-20 rounded-lg border-dashed'>
 						<input type="file" className='hidden' id='file-input' onChange={fileChange} accept="audio/*"></input>
 						{!uploaded && (
@@ -83,16 +118,16 @@ const Upload = () => {
 							</span>
 						)}
 					</div>
-				</div>
+				</motion.div>
 			)}
 			{loading === 'loading' && !finish && (
 				<Progress color='green' style={{ height: '20px', marginTop: '10px'}}/>
 			)}
 			{finish && (
 				<button 
-				className="relative inline-flex h-12 overflow-hidden rounded-lg p-[1px] mt-5"
-				onClick={showResults}
-			>
+					className="relative inline-flex h-12 overflow-hidden rounded-lg p-[1px] mt-5"
+					onClick={showResults}
+				>
 					<span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
 					<span className="font-inter inline-flex h-full w-full cursor-pointer items-center justify-center rounded-lg bg-violet hover:bg-purple px-6 py-2 text-sm font-medium text-white backdrop-blur-3xl">
 						Show Results
