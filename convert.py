@@ -12,7 +12,26 @@ import csv
 import numpy as np
 import os
 from pathlib import Path
+# import madmom
+from midiutil import MIDIFile
 
+AUDIO_SAMPLE_RATE = 5512  # for percussion: how many samples taken per second
+
+def drum_audio_to_midi(input_path):
+    y, sr = librosa.load(input_path, sr=AUDIO_SAMPLE_RATE)
+
+    # Calculate the onset envelope without time-stretching
+    onset_env = librosa.onset.onset_strength(y=y, sr=sr)
+    onset_frames = librosa.onset.onset_detect(onset_envelope=onset_env, sr=sr)
+    onset_times = librosa.frames_to_time(onset_frames, sr=sr)
+
+    midi = MIDIFile(1)
+    midi.addTempo(0, 0, 120)
+
+    for onset in onset_times:
+        midi.addNote(0, 9, 35, onset, 0.1, 100)  # Channel 9 is for drums, 35 is acoustic bass drum
+
+    return midi
 
 def change_instrument_mido(midi_file_path, new_instrument, output_file_path):
     mid = mido.MidiFile(midi_file_path)
@@ -44,8 +63,11 @@ def wav_to_midi(input_name, input_dir, output_dir, new_instrument, is_drum=False
 
         # REMOVE TEMP FILE
         # os.remove(temp_midi_path)
-    elif is_drum:
-        pass
+    else:
+        drum_midi_data = drum_audio_to_midi(input_path)
+        output_path = os.path.join(output_dir, output_name_midi)
+        with open(output_path, 'wb') as f:
+            drum_midi_data.writeFile(f)
 
 def midi_to_pdf(input_name, input_dir, output_dir, musescore_path):
     output_name_pdf = input_name.replace(".midi", ".pdf").replace(".mid", ".pdf")
@@ -117,7 +139,7 @@ def batch_wav_conversion(wav_dir, midi_dir, pdf_dir):
         else: # the 'other' file
             instrument_number = 0
 
-        wav_to_midi(input_name_wav, wav_dir, midi_dir, instrument_number)
+        wav_to_midi(input_name_wav, wav_dir, midi_dir, instrument_number, is_drum)
         midi_to_pdf(input_name_midi, midi_dir, pdf_dir, '/usr/bin/mscore3')
 
 if __name__ == "__main__":
@@ -128,4 +150,4 @@ if __name__ == "__main__":
     
     # single_wav_conversion('erika_trumpet', 'wav_files', 'midi_files', 'pdf_files', 57) # number corresponds to instrument in midi conversion system
     # batch_wav_conversion('redsun_wav', 'redsun_midi', 'redsun_pdf')
-    single_wav_conversion('erika_trumpet', 'wav_files', 'midi_files', 'pdf_files', 57, False)
+    single_wav_conversion('random_drumline', 'wav_files', 'midi_files', 'pdf_files', 57, True) # usage of last two variables (new_instrument and is_drum) are mutually exclusive: if one is used the other will not be in the code
