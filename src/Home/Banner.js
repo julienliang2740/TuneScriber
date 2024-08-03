@@ -1,8 +1,11 @@
 import React from 'react'
+import Music from '../img/score.png'
 
 const Banner = () => {
   return (
-	<div>Banner</div>
+	<div>
+		<img src={Music}/>
+	</div>
   )
 }
 

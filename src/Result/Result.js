@@ -4,8 +4,8 @@ import PlayerComponent from './PlayerComponent';
 import './styles.css';
 
 // Import images
-import leftImage from './score.png';
-import rightImage from './score.png';
+import leftImage from '../img/score.png';
+import rightImage from '../img/score.png';
 
 const container = {
   hidden: { opacity: 0 },
