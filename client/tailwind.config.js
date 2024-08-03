@@ -27,6 +27,13 @@ module.exports = {
 		maxHeight: {
 			medium: '55vh',
 			large: '75vh'
+		},
+		width: {
+			small: '350px',
+			large: '450px'
+		},
+		height: {
+			norm: '180px'
 		}
 	},
   },

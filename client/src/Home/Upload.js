@@ -2,9 +2,11 @@ import { Progress } from '@radix-ui/themes';
 import { React, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { FaDownload } from "react-icons/fa";
 
 const Upload = () => {
 	const [file, setFile] = useState('')
+	const [dragging, setDragging] = useState(false);
 	const [finish, setFinish] = useState(false);
 	const [uploaded, setUploaded] = useState(false);
 	const [loading, setLoading] = useState('upload needed');
@@ -17,6 +19,26 @@ const Upload = () => {
 	const fileChange = (event) => {
 		const file = event.target.files[0];
 		
+		if (file) {
+			setUploaded(true);
+			setFile(file.name);
+		}
+	}
+
+	const hoverFile = (event) => {
+		event.preventDefault();
+		setDragging(true);
+	}
+
+	const leaveFile = (event) => {
+		event.preventDefault();
+		setDragging(false);
+	}
+
+	const dropFiles = (event) => {
+		event.preventDefault();
+		setDragging(false);
+		const file = event.dataTransfer.files[0];
 		if (file) {
 			setUploaded(true);
 			setFile(file.name);
@@ -67,7 +89,9 @@ const Upload = () => {
 	}, [loading, finish])
 
 	return (
-		<div className='max-w-xxLarge flex flex-col m-1 justify-center items-center'>
+		<div 
+			className='max-w-xxLarge flex flex-col m-1 justify-center items-center'
+		>
 			<motion.h1 
 				className='font-inter opacity-75 text-large font-medium mb-2 ' 
 				variants={textAnimation}
@@ -78,19 +102,33 @@ const Upload = () => {
             </motion.h1>
 			{loading === 'upload needed' && (
 				<motion.div 
-					className='bg-opacity-15 bg-white p-2 rounded-lg m-5 border-white border border-opacity-100' 
+					className= 'p-2 rounded-lg m-5 border-white border border-opacity-100' 
 					variants={container}
 					initial="hidden"
         			animate="show"
+					onDragOver={hoverFile}
+					onDragLeave={leaveFile}
+					onDrop={dropFiles}
+					style={{ backgroundColor: dragging ? 'rgba(255, 255, 255, 0.6)' : 'rgba(255, 255, 255, 0.15)'}}
 				>
-					<div className='border-white border border-opacity-100 pb-12 pt-12 pr-20 pl-20 rounded-lg border-dashed'>
+					<div 
+						className='border-white border border-opacity-100 pb-10 pt-10 pr-15 pl-15 rounded-lg border-dashed xl:w-large w-small h-norm flex flex-col justify-center items-center'
+					>
 						<input type="file" className='hidden' id='file-input' onChange={fileChange} accept="audio/*"></input>
 						{!uploaded && (
-							<span>
-								<button className='bg-violet font-inter rounded-lg pt-4 pb-4 pr-10 pl-10 text-small hover:bg-purple' id="upload-button" onClick={uploadFile}>
-									Upload file
-								</button>
-								<p className='font-inter text-small mt-1'>or drop the file here</p>
+							<span className='flex flex-col justify-center items-center'>
+								{!dragging && (
+									<button className='bg-violet font-inter rounded-lg pt-4 pb-4 pr-10 pl-10 text-small hover:bg-purple' id="upload-button" onClick={uploadFile}>
+										Upload file
+									</button>
+								)}
+								{dragging && (
+									<FaDownload size={30} color='#252273'/>
+								)}
+								<p 
+									className='font-inter text-small mt-1'
+									style={{ color: dragging ? '#252273' : 'white'}}
+								>{dragging ? 'Drop the file here' : 'or drop the file here'}</p>
 							</span>
 						)}
 						{uploaded && (
