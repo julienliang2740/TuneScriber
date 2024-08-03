@@ -10,9 +10,7 @@ function App() {
       <div className="App">
         <header className="App-header">
           <div className='m-10'>
-            {/* <h1 className='font-inter opacity-75 text-large font-medium mb-2'>
-              The Best Sheet Music Generator
-            </h1> */}
+            
             <Routes>
               <Route path="/upload" element={<Upload />} />
 			  <Route path="/result" element={<Result />} />
