@@ -25,6 +25,8 @@ class MusicProcessor:
         self.api_key = api_key
         self.stem_separation_workflow_id = stem_separation_workflow_id
         self.client = MusicAiClient(api_key=api_key)
+        self.uploaded_file = None
+        self.processed_files = []
 
     def upload(self, file):
         response = self.client.upload_file(file)

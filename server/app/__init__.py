@@ -38,15 +38,6 @@ def create_app():
         file.save(filepath)
         return jsonify({'message': 'File uploaded successfully'}), 200
 
-        # if file.filename == '':
-        #     print("no selected file")
-        #     return jsonify({'error': 'No selected file'}), 400
-
-        # if file and allowed_file(file.name):
-        #     print("allowed")
-
-        return "kms"
-
     @app.route('/')
     def index():
         return "Hello, World!"
@@ -58,44 +49,54 @@ def create_app():
 
     @app.route('/separate', methods=["POST"])
     def separate_audio():
-        if not os.path.exists("./processed"):
-            os.makedirs("./processed")
-            print("Created processed directory")
-        else:
-            print("Processed directory already exists")
+        #     if not os.path.exists("./processed"):
+        #         os.makedirs("./processed")
+        #         print("Created processed directory")
+        #     else:
+        #         print("Processed directory already exists")
 
-        file = request.files['file']
-        print(file)
+        #     file = request.files['file']
+        #     print(file)
 
-        filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-        if not os.path.exists(app.config['UPLOAD_FOLDER']):
-            # Ensure the upload folder exists
-            os.makedirs(app.config['UPLOAD_FOLDER'])
-            print(f"Created directory {app.config['UPLOAD_FOLDER']}")
-        file.save(filepath)
+        #     filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+        #     if not os.path.exists(app.config['UPLOAD_FOLDER']):
+        #         # Ensure the upload folder exists
+        #         os.makedirs(app.config['UPLOAD_FOLDER'])
+        #         print(f"Created directory {app.config['UPLOAD_FOLDER']}")
+        #     file.save(filepath)
 
-        mp = MusicProcessor()
-        status, result = mp.separate(filepath)
+        #     mp = MusicProcessor()
+        #     status, result = mp.separate(filepath)
 
-        print(status, "separated")
+        #     print(status, "separated")
 
-        for instrument, url in result.items():
-            mp.download(url, "./processed", instrument + ".wav")
-            print(f"Downloaded {instrument} to processed directory")
+        #     processed_files = {}
 
-        return jsonify(result), 200
-
-        # if os.path.exists("temp"):
-        #     shutil.rmtree("temp")
-        #     print(f"Directory temp and its contents deleted")
-        # else:
-        #     print(f"Directory temp does not exist")
-
-        # zip_buffer = io.BytesIO()
-
-        # with zipfile.ZipFile(zip_buffer, "w") as zip_file:
         #     for instrument, url in result.items():
-        #         response = requests.get(url)
-        #         zip_file.writestr(instrument, response.content)
+        #         mp.download(url, "./processed", instrument + ".wav")
+        #         processed_files[instrument] = instrument + ".wav"
+        #         print(f"Downloaded {instrument} to processed directory")
+
+        processed_files = {
+            "bass": "bass.wav",
+            "drums": "drums.wav",
+            "guitar": "guitar.wav",
+            "keys": "keys.wav",
+            "other": "other.wav",
+            "piano": "piano.wav",
+            "strings": "strings.wav",
+            "vocals": "vocals.wav",
+            "wind": "wind.wav"
+        }
+
+        # zip
+        memory_file = io.BytesIO()
+        with zipfile.ZipFile(memory_file, 'w') as zf:
+            for instrument, file in processed_files.items():
+                zf.write(os.path.join("./processed", file), file)
+
+        memory_file.seek(0)
+
+        return send_file(path_or_file=memory_file, download_name='processed.zip', as_attachment=True)
 
     return app
