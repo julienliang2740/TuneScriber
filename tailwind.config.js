@@ -16,9 +16,16 @@ module.exports = {
 			small: '14px',
 			medium: '24px',
 			large: '36px'
+		},
+		maxWidth: {
+			small: '175px',
+			medium: '300px',
+			large: '500px'
 		}
 	},
   },
-  plugins: [],
+  plugins: [
+  ],
 }
+  
 
