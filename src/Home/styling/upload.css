@@ -1,0 +1,10 @@
+.upload-button {
+	background-color: '#252273';
+	padding: '25px 40px 25px 40px';
+	border-radius: '0.5em';
+	font-family: 'Inter';
+}
+
+.upload-button:hover {
+	cursor: pointer;
+}
