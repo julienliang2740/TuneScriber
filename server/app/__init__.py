@@ -45,9 +45,9 @@ def create_app():
 
         if os.path.exists("temp"):
             shutil.rmtree("temp")
-            print(f"Directory '{"temp"}' and its contents deleted")
+            print(f"Directory temp and its contents deleted")
         else:
-            print(f"Directory '{"temp"}' does not exist")
+            print(f"Directory temp does not exist")
 
         # zip_buffer = io.BytesIO()
 
