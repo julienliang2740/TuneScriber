@@ -17,7 +17,7 @@ const Banner = () => {
 
 	return (
 		<motion.div 
-			className='bg-white bg-opacity-20 p-5 rounded-3xl m-10 fixed top-3/4'
+			className='bg-white bg-opacity-20 p-5 rounded-3xl m-10 fixed sm:top-2/3 top-3/4'
 			variants={container}
 			initial="hidden"
 			animate="show"

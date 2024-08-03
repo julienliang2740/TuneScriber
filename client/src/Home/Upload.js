@@ -58,16 +58,16 @@ const Upload = () => {
 	useEffect(() => {
 		// fake for now
 		if (loading === 'loading') {
-			console.log('loading');
+			console.log('loading', finish);
 
 			setTimeout(() => {
 				setFinish(true);
 			  }, 5000)
 		}
-	}, [loading])
+	}, [loading, finish])
 
 	return (
-		<div className='max-w-xLarge flex flex-col m-1 justify-center items-center'>
+		<div className='max-w-xxLarge flex flex-col m-1 justify-center items-center'>
 			<motion.h1 
 				className='font-inter opacity-75 text-large font-medium mb-2 ' 
 				variants={textAnimation}

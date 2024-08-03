@@ -21,7 +21,8 @@ module.exports = {
 			small: '175px',
 			medium: '300px',
 			large: '350px',
-			xLarge: '500px'
+			xLarge: '500px', 
+			xxLarge: '600px'
 		}
 	},
   },
