@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import PlayerComponent from './PlayerComponent';
 import './styles.css';
 import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 // Import images
 
@@ -30,18 +31,31 @@ const textAnimation = {
 
 function Result() {
 	const navigate = useNavigate();
-	const audioFiles = [
-		{ fileName: 'music.mp3', audioSrc: '/audio/music.mp3', delay: 0 },
-		{ fileName: 'drums.mp3', audioSrc: '/audio/drums.mp3', delay: 0.3 },
-		{ fileName: 'bass.wav', audioSrc: '/audio/bass.wav', delay: 0.6 },
-		{ fileName: 'guitar.mp3', audioSrc: '/audio/guitar.mp3', delay: 0.9 },
-		{ fileName: 'piano.mp3', audioSrc: '/audio/piano.mp3', delay: 1.2 },
-		{ fileName: 'violin.mp3', audioSrc: '/audio/violin.mp3', delay: 1.5 },
-	];
+  const location = useLocation();
+  const [files, setFiles] = useState({});
+
+  // Retrieve files from localStorage if they exist
+  useEffect(() => {
+    const storedFiles = localStorage.getItem('files');
+    if (storedFiles) {
+      setFiles(JSON.parse(storedFiles));
+    }
+  }, []);
+
+  // Save files to localStorage if passed via location.state
+  useEffect(() => {
+    if (location.state && location.state.files) {
+      setFiles(location.state.files);
+      localStorage.setItem('files', JSON.stringify(location.state.files));
+    }
+  }, [location.state]);
+
 
 	const convertAgain = () => {
 		navigate('/');
 	}
+
+
 
 	return (
 		<div className="mt-12 relative min-h-screen text-center text-white">
@@ -60,18 +74,18 @@ function Result() {
 			initial="hidden"
 			animate="show"
 		>
-			{audioFiles.map((audio, index) => (
-			<PlayerComponent 
-				key={index}
-				fileName={audio.fileName}
-				audioSrc={audio.audioSrc}
-				delay={audio.delay}
-			/>
-			))}
+			{files && Object.keys(files).map((fileName, index) => (
+            <PlayerComponent 
+              key={index}
+              fileName={fileName}
+              audioSrc={files[fileName]}
+              delay={index * 0.3}  // Adjust delay dynamically based on index
+            />
+          ))}
 		</motion.div>
 		</div>
 		<button 
-			className='pr-5 pl-5 pt-2 text-opacity-100 text-white pb-2 rounded-lg border-white border border-opacity-100 hover:border-opacity-30 hover:text-opacity-50'
+			className='pr-5 pl-5 pt-2 text-opacity-100 text-white pb-2 rounded-lg border-white border border-opacity-100 hover:border-opacity-50 hover:text-opacity-50'
 			onClick={convertAgain}
 		>
 			Convert another song
