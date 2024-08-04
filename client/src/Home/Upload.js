@@ -8,12 +8,13 @@ import JSZip from "jszip";
 import { saveAs } from "file-saver";
 
 const Upload = () => {
+	const [files, setFiles] = useState({});
     const [file, setFile] = useState("");
     const [dragging, setDragging] = useState(false);
     const [fileSource, setFileSource] = useState(null);
     const [finish, setFinish] = useState(false);
     const [uploaded, setUploaded] = useState(false);
-    const [loading, setLoading] = useState("upload needed");
+    const [loading, setLoading] = useState(false);
     const [mp3Url, setMp3Url] = useState("");
     const navigate = useNavigate();
 
@@ -53,6 +54,8 @@ const Upload = () => {
     };
 
     const startGenerating = async () => {
+		setLoading(true);
+        console.log(loading)
         const formData = new FormData();
         formData.append("file", fileSource);
         console.log("file", file);
@@ -69,23 +72,39 @@ const Upload = () => {
                     },
                 }
             );
-            const processedFiles = [];
             if (response.status === 200) {
+				setLoading(false);
                 const zip = new JSZip();
                 const content = await zip.loadAsync(response.data);
                 console.log(content);
-                Object.keys(content.files).forEach(async (filename) => {
-                    const fileData = await content.files[filename].async(
-                        "blob"
-                    );
-                    const url = URL.createObjectURL(
-                        new Blob([fileData], { type: "audio/mp3" })
-                    );
-                    if (filename === "vocals.wav") {
-                        setMp3Url(url);
+				const files = {};
+                for (const filename of Object.keys(content.files)) {
+                    let url;
+                    const fileData = await content.files[filename].async("blob");
+                    if (filename.endsWith(".wav")) {
+                        url = URL.createObjectURL(new Blob([fileData], { type: "audio/mp3" }));
+                    } else if (filename.endsWith(".pdf")) {
+                        url = URL.createObjectURL(new Blob([fileData], { type: "application/pdf" }));
+                    } else {
+                        url = URL.createObjectURL(new Blob([fileData], { type: "application/json" }));
                     }
-                    console.log(url);
-                });
+
+                    files[filename] = url;
+                }
+                console.log(files)
+                // Object.keys(content.files).forEach(async (filename) => {
+                //     const fileData = await content.files[filename].async(
+                //         "blob"
+                //     );
+                //     const url = URL.createObjectURL(
+                //         new Blob([fileData], { type: "audio/mp3" })
+                //     );
+                    // if (filename === "vocals.wav") {
+                    //     setMp3Url(url);
+                    // }
+                    // console.log(url);
+                //});
+				setFiles(files);
                 setFinish(true);
                 setLoading(false);
             } else {
@@ -97,7 +116,8 @@ const Upload = () => {
     };
 
     const showResults = async () => {
-        navigate("/result");
+		navigate('/result', { state: { files } });
+
         // try {
         // 	const response = await axios.get('http://127.0.0.1:5000/get-audio', {
         // 		responseType: 'blob',
@@ -158,7 +178,7 @@ const Upload = () => {
             >
                 Convert Your Favourite Song
             </motion.h1>
-            {loading === "upload needed" && (
+            {!loading && !finish && (
                 <motion.div
                     className="p-2 rounded-lg m-5 border-white border border-opacity-100"
                     variants={container}
@@ -220,7 +240,7 @@ const Upload = () => {
                             </span>
                         )}
 
-                        {uploaded && (
+                        {uploaded && !loading && (
                             <span>
                                 <button
                                     className="relative inline-flex h-12 overflow-hidden rounded-lg p-[1px]"
@@ -236,12 +256,13 @@ const Upload = () => {
                     </div>
                 </motion.div>
             )}
-            {loading === "loading" && !finish && (
+            {loading && (
                 <span className="w-full">
                     <Progress
                         color="green"
                         style={{ height: "20px", marginTop: "10px" }}
                     />
+                    <p className="font-inter text-small text-center text-white mt-5">Loading...</p>
                 </span>
             )}
             {finish && (
@@ -253,9 +274,6 @@ const Upload = () => {
                     <span className="font-inter inline-flex h-full w-full cursor-pointer items-center justify-center rounded-lg bg-violet hover:bg-purple px-6 py-2 text-sm font-medium text-white backdrop-blur-3xl">
                         Show Results
                     </span>
-                    <audio controls src={mp3Url} className="mt-5">
-                        Your browser does not support the audio element.
-                    </audio>
                 </button>
             )}
         </div>
