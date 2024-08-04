@@ -8,6 +8,7 @@ import JSZip from "jszip";
 import { saveAs } from "file-saver";
 
 const Upload = () => {
+	const [files, setFiles] = useState({});
     const [file, setFile] = useState("");
     const [dragging, setDragging] = useState(false);
     const [fileSource, setFileSource] = useState(null);
@@ -94,7 +95,7 @@ const Upload = () => {
                     // }
                     // console.log(url);
                 //});
-				navigate('/result', { state: { files } });
+				setFiles(files);
                 setFinish(true);
                 setLoading(false);
             } else {
@@ -106,7 +107,7 @@ const Upload = () => {
     };
 
     const showResults = async () => {
-        navigate("/result");
+		navigate('/result', { state: { files } });
 
         // try {
         // 	const response = await axios.get('http://127.0.0.1:5000/get-audio', {
@@ -263,9 +264,6 @@ const Upload = () => {
                     <span className="font-inter inline-flex h-full w-full cursor-pointer items-center justify-center rounded-lg bg-violet hover:bg-purple px-6 py-2 text-sm font-medium text-white backdrop-blur-3xl">
                         Show Results
                     </span>
-                    <audio controls src={mp3Url} className="mt-5">
-                        Your browser does not support the audio element.
-                    </audio>
                 </button>
             )}
         </div>
