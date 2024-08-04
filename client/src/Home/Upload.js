@@ -52,11 +52,7 @@ const Upload = () => {
         }
     };
 
-    const startGenerating = () => {
-        setLoading("loading");
-    };
-
-    const showResults = async () => {
+    const startGenerating = async () => {
         const formData = new FormData();
         formData.append("file", fileSource);
         console.log("file", file);

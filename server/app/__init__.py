@@ -49,51 +49,51 @@ def create_app():
 
     @app.route('/separate', methods=["POST"])
     def separate_audio():
-        #     if not os.path.exists("./processed"):
-        #         os.makedirs("./processed")
-        #         print("Created processed directory")
-        #     else:
-        #         print("Processed directory already exists")
+        if not os.path.exists("./processed"):
+            os.makedirs("./processed")
+            print("Created processed directory")
+        else:
+            print("Processed directory already exists")
 
-        #     file = request.files['file']
-        #     print(file)
+        file = request.files['file']
+        print(file)
 
-        #     filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-        #     if not os.path.exists(app.config['UPLOAD_FOLDER']):
-        #         # Ensure the upload folder exists
-        #         os.makedirs(app.config['UPLOAD_FOLDER'])
-        #         print(f"Created directory {app.config['UPLOAD_FOLDER']}")
-        #     file.save(filepath)
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+        if not os.path.exists(app.config['UPLOAD_FOLDER']):
+            # Ensure the upload folder exists
+            os.makedirs(app.config['UPLOAD_FOLDER'])
+            print(f"Created directory {app.config['UPLOAD_FOLDER']}")
+        file.save(filepath)
 
-        #     mp = MusicProcessor()
-        #     status, result = mp.separate(filepath)
+        mp = MusicProcessor()
+        status, result = mp.separate(filepath)
 
-        #     print(status, "separated")
+        print(status, "separated")
 
-        #     processed_files = {}
+        processed_files = {}
 
-        #     for instrument, url in result.items():
-        #         mp.download(url, "./processed", instrument + ".wav")
-        #         processed_files[instrument] = instrument + ".wav"
-        #         print(f"Downloaded {instrument} to processed directory")
+        for instrument, url in result.items():
+            mp.download(url, "./processed", instrument + ".wav")
+            processed_files[instrument] = instrument + ".wav"
+            print(f"Downloaded {instrument} to processed directory")
 
-        processed_files = {
-            "bass": "bass.wav",
-            "drums": "drums.wav",
-            "guitar": "guitar.wav",
-            "keys": "keys.wav",
-            "other": "other.wav",
-            "piano": "piano.wav",
-            "strings": "strings.wav",
-            "vocals": "vocals.wav",
-            "wind": "wind.wav"
-        }
+        # processed_files = {
+        #     "bass": "bass.wav",
+        #     "drums": "drums.wav",
+        #     "guitar": "guitar.wav",
+        #     "keys": "keys.wav",
+        #     "other": "other.wav",
+        #     "piano": "piano.wav",
+        #     "strings": "strings.wav",
+        #     "vocals": "vocals.wav",
+        #     "wind": "wind.wav"
+        # }
 
         # zip
         memory_file = io.BytesIO()
         with zipfile.ZipFile(memory_file, 'w') as zf:
             for instrument, file in processed_files.items():
-                zf.write(os.path.join("./processed", file), file)
+                zf.write(os.path.join(".\\processed", file), file)
 
         memory_file.seek(0)
 
