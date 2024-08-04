@@ -9,6 +9,7 @@ import pretty_midi
 import json
 import csv
 import numpy as np
+import shutil
 
 from basic_pitch.inference import *
 from basic_pitch import ICASSP_2022_MODEL_PATH
@@ -27,6 +28,8 @@ STEM_SEPARATION_WORKFLOW_ID = os.getenv("STEM_SEPARATION_WORKFLOW_ID")
 STEM_SEPARATION_ENDPOINT = f"https://api.music.ai/api/job"
 UPLOAD_URL_ENDPOINT = "https://api.music.ai/api/upload"
 
+# default to cpu (ignore cpu for now)
+os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 
 class MusicProcessor:
     def __init__(self, api_key=MUSICAI_KEY, stem_separation_workflow_id=STEM_SEPARATION_WORKFLOW_ID):
@@ -162,6 +165,7 @@ class MusicProcessor:
             elif input_name_no_filetype == 'drums':
                 instrument_number = 0  # Program change number is not used for drums, so it's set to 0
                 is_drum = True
+                continue
             elif input_name_no_filetype == 'guitar':
                 instrument_number = 24
             elif input_name_no_filetype == 'keys':
@@ -183,11 +187,14 @@ class MusicProcessor:
     #### get lyrics for audio ####
 
     def get_lyrics(self, model_size, filename, expected_language):
-        model = whisper.load_model(model_size, device="cuda")
+        # model = whisper.load_model(model_size, device="cuda")
+        model = whisper.load_model(model_size) #^ no gpu for now
         result = model.transcribe(filename)
 
         lyrics_array = []
         output_filename = filename.split('.')[0] + '_lyrics.json'
+        # parent_directory = ".."
+        # output_filepath = os.path.join(parent_directory, output_filename) # because we are using vocals.wav, which is in the processed_wav folder, to avoid confusion we move it one folder back into server/
 
         if result['language'] != expected_language: # acronyms such as en, zh, de (english, chinese, german)
             lyrics_array.append("(could not get lyrics)")
@@ -198,4 +205,8 @@ class MusicProcessor:
         return_dict = {"lyrics_array": lyrics_array}
 
         with open(output_filename, 'w') as outfile:
-                json.dump(return_dict, outfile, indent=4)
+            json.dump(return_dict, outfile, indent=4)
+        
+        destination = os.path.join('.', "lyrics_text.json")
+        shutil.move(output_filename, destination)
+        print(f'Lyrics file moved to {destination}')
