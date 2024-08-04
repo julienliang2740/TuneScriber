@@ -20,9 +20,6 @@ const Upload = () => {
     const uploadFile = () => {
         document.getElementById("file-input").click();
     };
-    const uploadFile = () => {
-        document.getElementById("file-input").click();
-    };
 
     const fileChange = (event) => {
         const file = event.target.files[0];
@@ -128,29 +125,6 @@ const Upload = () => {
             },
         },
     };
-    const textAnimation = {
-        hidden: { opacity: 0, y: -50 },
-        show: {
-            opacity: 0.9,
-            y: 0,
-            transition: {
-                duration: 1,
-                ease: "easeOut",
-            },
-        },
-    };
-
-    const container = {
-        hidden: { opacity: 0 },
-        show: {
-            opacity: 1,
-            transition: {
-                delay: 0.5,
-                duration: 1,
-                ease: "easeOut",
-            },
-        },
-    };
     const container = {
         hidden: { opacity: 0 },
         show: {
@@ -163,16 +137,6 @@ const Upload = () => {
         },
     };
 
-    // useEffect(() => {
-    //     // fake for now
-    //     if (loading) {
-    //         console.log("loading");
-
-    //         // setTimeout(() => {
-    //         //     setFinish(true);
-    //         // }, 5000);
-    //     }
-    // }, [loading]);
     // useEffect(() => {
     //     // fake for now
     //     if (loading) {
