@@ -4,6 +4,7 @@ import { Slider } from "@radix-ui/themes";
 import { motion } from "framer-motion";
 import PreviewPDF from "./PreviewPDF";
 import PDFTest from "../public/pdf/pdf-test.pdf";
+import { FaDownload } from "react-icons/fa";
 
 function PlayerComponent({ fileName, audioSrc, delay }) {
     const audioRef = useRef(null);
@@ -121,7 +122,7 @@ function PlayerComponent({ fileName, audioSrc, delay }) {
                     >
                         Preview PDF
                     </button>
-                    <button className="custom-button">Download Sheet</button>
+                    <button className="custom-button"><FaDownload /></button>
                 </div>
             </div>
             {showModal && (
