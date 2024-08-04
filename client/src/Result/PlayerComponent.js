@@ -103,7 +103,7 @@ function PlayerComponent({ fileName, audioSrc, delay }) {
 			<button className="w-10 flex justify-center items-center "
 				onClick={handleDownload}
 			>
-				<FaDownload />
+				<FaDownload className='hover:text-opacity-50 text-opacity-100 text-white'/>
 			</button>
 			</div>
 		</div>

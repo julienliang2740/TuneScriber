@@ -71,7 +71,7 @@ function Result() {
 		</motion.div>
 		</div>
 		<button 
-			className='pr-5 pl-5 pt-2 text-opacity-100 text-white pb-2 rounded-lg border-white border border-opacity-100 hover:border-opacity-30 hover:text-opacity-50'
+			className='pr-5 pl-5 pt-2 text-opacity-100 text-white pb-2 rounded-lg border-white border border-opacity-100 hover:border-opacity-50 hover:text-opacity-50'
 			onClick={convertAgain}
 		>
 			Convert another song
