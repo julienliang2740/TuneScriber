@@ -13,7 +13,7 @@ const Upload = () => {
     const [fileSource, setFileSource] = useState(null);
     const [finish, setFinish] = useState(false);
     const [uploaded, setUploaded] = useState(false);
-    const [loading, setLoading] = useState("upload needed");
+    const [loading, setLoading] = useState(false);
     const [mp3Url, setMp3Url] = useState("");
     const navigate = useNavigate();
 
@@ -168,7 +168,7 @@ const Upload = () => {
             >
                 Convert Your Favourite Song
             </motion.h1>
-            {loading === "upload needed" && (
+            {!loading && !finish && (
                 <motion.div
                     className="p-2 rounded-lg m-5 border-white border border-opacity-100"
                     variants={container}
@@ -246,7 +246,7 @@ const Upload = () => {
                     </div>
                 </motion.div>
             )}
-            {loading === "loading" && !finish && (
+            {loading && !finish && (
                 <span className="w-full">
                     <Progress
                         color="green"
