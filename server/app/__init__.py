@@ -93,7 +93,7 @@ def create_app():
         memory_file = io.BytesIO()
         with zipfile.ZipFile(memory_file, 'w') as zf:
             for instrument, file in processed_files.items():
-                zf.write(os.path.join(".\\processed", file), file)
+                zf.write(os.path.join("./processed", file), file)
 
         memory_file.seek(0)
 

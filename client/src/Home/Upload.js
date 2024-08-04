@@ -53,6 +53,7 @@ const Upload = () => {
     };
 
     const startGenerating = async () => {
+		setLoading(true);
         const formData = new FormData();
         formData.append("file", fileSource);
         console.log("file", file);
@@ -71,21 +72,29 @@ const Upload = () => {
             );
             const processedFiles = [];
             if (response.status === 200) {
+				setLoading(false);
                 const zip = new JSZip();
                 const content = await zip.loadAsync(response.data);
                 console.log(content);
-                Object.keys(content.files).forEach(async (filename) => {
-                    const fileData = await content.files[filename].async(
-                        "blob"
-                    );
-                    const url = URL.createObjectURL(
-                        new Blob([fileData], { type: "audio/mp3" })
-                    );
-                    if (filename === "vocals.wav") {
-                        setMp3Url(url);
-                    }
-                    console.log(url);
-                });
+				const files = {};
+                for (const filename of Object.keys(content.files)) {
+                    const fileData = await content.files[filename].async("blob");
+                    const url = URL.createObjectURL(new Blob([fileData], { type: "audio/mp3" }));
+                    files[filename] = url;
+                }
+                // Object.keys(content.files).forEach(async (filename) => {
+                //     const fileData = await content.files[filename].async(
+                //         "blob"
+                //     );
+                //     const url = URL.createObjectURL(
+                //         new Blob([fileData], { type: "audio/mp3" })
+                //     );
+                    // if (filename === "vocals.wav") {
+                    //     setMp3Url(url);
+                    // }
+                    // console.log(url);
+                //});
+				navigate('/result', { state: { files } });
                 setFinish(true);
                 setLoading(false);
             } else {
@@ -98,6 +107,7 @@ const Upload = () => {
 
     const showResults = async () => {
         navigate("/result");
+
         // try {
         // 	const response = await axios.get('http://127.0.0.1:5000/get-audio', {
         // 		responseType: 'blob',
