@@ -10,8 +10,8 @@ const Modal = ({ showModal, setShowModal, pdfSrc }) => {
 
   return (
     <Dialog.Root open={showModal} onOpenChange={setShowModal} appearance="dark">
-      <Dialog.Content>
-        <Dialog.Title className="text-xl font-semibold mb-4">PDF Preview</Dialog.Title>
+      <Dialog.Content color="violet">
+        <Dialog.Title className="text-xl font-semibold mb-4 font-inter">PDF Preview</Dialog.Title>
         <Dialog.Description className="mb-4">Preview the PDF below.</Dialog.Description>
         <div style={{ width: '100%', height: '70vh', position: 'relative' }}>
           {isLoading && (
