@@ -9,13 +9,6 @@ from basic_pitch import ICASSP_2022_MODEL_PATH
 from basic_pitch.constants import AUDIO_SAMPLE_RATE, FFT_HOP
 from music21 import converter, instrument, note, chord, stream, environment
 
-import mido
-import librosa
-
-import pretty_midi
-import json
-import csv
-import numpy as np
 from pathlib import Path
 
 load_dotenv()
@@ -32,6 +25,8 @@ class MusicProcessor:
         self.api_key = api_key
         self.stem_separation_workflow_id = stem_separation_workflow_id
         self.client = MusicAiClient(api_key=api_key)
+        self.uploaded_file = None
+        self.processed_files = []
 
     def upload(self, file):
         response = self.client.upload_file(file)
