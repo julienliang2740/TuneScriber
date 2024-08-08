@@ -22,6 +22,7 @@ pip install -r requirements.txt
 Run local host
 ```
 cd ../client
+npm install
 npm start
 ```
 
